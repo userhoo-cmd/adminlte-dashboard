@@ -159,6 +159,8 @@ return [
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
+
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Views Classes
@@ -300,6 +302,7 @@ return [
 
     'menu' => [
         // Navbar items:
+
         [
             'type' => 'navbar-search',
             'text' => 'search',
@@ -310,7 +313,26 @@ return [
             'topnav_right' => true,
         ],
 
+        [
+        'type' => 'navbar-right',
+        'text' => '',
+        'icon' => 'fas fa-globe',
+        'submenu' => [
+            [
+                'text' => '🇬🇧 English',
+                'url'  => 'lang/en',
+            ],
+            
+            [
+                'text' => '🇨🇳 中文',
+                'url'  => 'lang/zh',
+            ],
+        ],
+    ],
+
         // Sidebar items:
+        
+        
         [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
@@ -392,6 +414,7 @@ return [
             'icon_color' => 'cyan',
             'url' => '#',
         ],
+        
     ],
 
     /*

@@ -27,7 +27,15 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
 
                 <!-- Profile -->
                 <li class="nav-item">
@@ -45,33 +53,19 @@
                     </a>
                 </li>
 
-                <!-- 🔒 Only Super Admin can see these -->
+                <!-- 🔒 Superadmin Section -->
                 @role('superadmin')
                     <li class="nav-header">MANAGEMENT</li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-box"></i>
                             <p>Products</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-shopping-cart"></i>
-                            <p>Orders</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-cash-register"></i>
-                            <p>Sales</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('payments.index') }}" class="nav-link {{ request()->routeIs('payments.*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-credit-card"></i>
                             <p>Payments</p>
                         </a>
@@ -87,7 +81,8 @@
 
                 <!-- Logout -->
                 <li class="nav-item mt-3">
-                    <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <a href="#" class="nav-link text-danger"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
                         <p>Logout</p>
                     </a>
@@ -103,13 +98,12 @@
 {{-- ✅ Auto-refresh avatars after update --}}
 @if (session('success'))
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const newAvatar = "{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}";
-        const sidebarAvatar = document.getElementById('sidebar-avatar');
-        const navbarAvatar = document.getElementById('navbar-avatar');
-
-        if (sidebarAvatar) sidebarAvatar.src = newAvatar;
-        if (navbarAvatar) navbarAvatar.src = newAvatar;
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const newAvatar = "{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}";
+    const sidebarAvatar = document.getElementById('sidebar-avatar');
+    const navbarAvatar = document.getElementById('navbar-avatar');
+    if (sidebarAvatar) sidebarAvatar.src = newAvatar;
+    if (navbarAvatar) navbarAvatar.src = newAvatar;
+});
 </script>
 @endif

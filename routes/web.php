@@ -7,6 +7,28 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController; // Move this to the top
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PaymentController;
+
+// 🌐 Language Switcher
+Route::get('/locale/{lang}', function ($lang) {
+    if (!in_array($lang, ['en', 'ms', 'zh'])) {
+        abort(400); // invalid language
+    }
+
+    session(['locale' => $lang]);
+    app()->setLocale($lang);
+
+    return redirect()->back();
+})->name('locale.switch');
+
+Route::post('/language-switch', function (Illuminate\Http\Request $request) {
+    $locale = $request->input('locale');
+    Session::put('locale', $locale);
+    App::setLocale($locale);
+    return back();
+})->name('language.switch');
+
 
 // 🚪 Redirect homepage → login
 Route::get('/', function () {
@@ -35,6 +57,29 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // Dashboard page
 
     // 👤 Profile routes
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // Edit profile page
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Update profile data
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update'); // Update profile data
+
 });
+// Products
+
+
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
+
+
+
+Route::get('lang/{locale}', function ($locale) {
+    $languages = ['en','es','fr','de','it','pt','ru','ja','zh','ko','ms','th','vi','tr','nl','sv','pl'];
+
+    if (in_array($locale, $languages)) {
+        Session::put('locale', $locale);
+        App::setLocale($locale);
+    }
+
+    return redirect()->back();
+})->name('lang.switch');
+
+

@@ -2,70 +2,80 @@
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('dashboard') }}" class="nav-link">{{ __('Dashboard') }}</a>
         </li>
     </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        @auth
-        <!-- User Dropdown Menu -->
+        <!-- 🌐 Language Switcher -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                <i class="fas fa-language"></i> {{ strtoupper(app()->getLocale()) }}
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                @php
+                    $languages = [
+                        'en' => ['name' => 'English', 'flag' => '🇬🇧'],
+                        'es' => ['name' => 'Español', 'flag' => '🇪🇸'],
+                        'fr' => ['name' => 'Français', 'flag' => '🇫🇷'],
+                        'de' => ['name' => 'Deutsch', 'flag' => '🇩🇪'],
+                        'ms' => ['name' => 'Bahasa Melayu', 'flag' => '🇲🇾'],
+                        'zh' => ['name' => '中文', 'flag' => '🇨🇳'],
+                        'ja' => ['name' => '日本語', 'flag' => '🇯🇵'],
+                        'ko' => ['name' => '한국어', 'flag' => '🇰🇷'],
+                    ];
+                @endphp
+                @foreach ($languages as $code => $lang)
+                    <a href="{{ route('lang.switch', $code) }}"
+                       class="dropdown-item d-flex align-items-center {{ app()->getLocale() === $code ? 'active bg-light' : '' }}">
+                        <span style="font-size: 1.2em; margin-right: 8px;">{{ $lang['flag'] }}</span>
+                        {{ $lang['name'] }}
+                    </a>
+                @endforeach
+            </div>
+        </li>
 
+        <!-- 🧍 User Menu -->
         <li class="nav-item dropdown user-menu">
-    <a href="{{ route('profile.edit') }}" class="nav-link dropdown-toggle d-flex align-items-center" aria-expanded="false">
-        <!-- Top-right Avatar Preview -->
-        <img id="navbar-avatar" src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-        <span class="d-none d-md-inline ml-2 font-weight-bold text-dark">
-            {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
-        </span>
-    </a>
-</li>
-
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <img src="{{ Auth::user()->avatar
+                    ? asset('storage/' . Auth::user()->avatar)
+                    : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"
+                    class="user-image img-circle elevation-2"
+                    id="navbar-avatar"
+                    alt="User Image">
+                <span class="d-none d-md-inline">{{ Auth::user()->first_name }}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <!-- User image -->
+                <li class="user-header bg-primary">
+                    <img src="{{ Auth::user()->avatar
+                        ? asset('storage/' . Auth::user()->avatar)
+                        : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}"
+                        class="img-circle elevation-2"
+                        alt="User Image">
+                    <p>
+                        {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
+                        <small>{{ Auth::user()->email }}</small>
+                    </p>
+                </li>
 
                 <!-- Menu Footer-->
-                 <li class="nav-item">
-        <a class="nav-link" href="{{ route('logout') }}"
-           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            Logout
-        </a>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
-    </li>
+                <li class="user-footer">
+                    <a href="{{ route('profile.edit') }}" class="btn btn-default btn-flat">{{ __('Profile') }}</a>
+                    <a href="#" class="btn btn-default btn-flat float-right"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        {{ __('Sign out') }}
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                 </li>
             </ul>
         </li>
-        @endauth
-
-        @guest
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('login') }}">Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('register') }}">Register</a>
-        </li>
-        @endguest
     </ul>
 </nav>
-
-<!-- Scripts (keep these at the bottom) -->
-<script src="{{ asset('vendor/adminlte/plugins/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
-<script>
-    function previewTopRightImage(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const preview = document.getElementById('topright-avatar');
-            preview.src = reader.result; // Set the image source to the selected file
-        }
-        reader.readAsDataURL(event.target.files[0]);
-    }
-</script>
-<script>
-    // 🔹 Refresh sidebar and navbar avatars after successful update
-    const newAvatar = "{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}";
-    document.getElementById('sidebar-avatar').src = newAvatar;
-    document.getElementById('navbar-avatar').src = newAvatar;
-</script>
-

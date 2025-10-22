@@ -13,26 +13,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1️⃣ Create or update the default admin user
-        $admin = User::updateOrCreate(
+        // ✅ Call your role + user seeder
+        $this->call(CreateUsersWithRolesSeeder::class);
+
+        // ✅ Optionally: extra demo users (won’t conflict)
+        User::updateOrCreate(
             ['email' => 'admin@gmail.com'],
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
-                'password' => Hash::make('password123'), // Login password
+                'password' => Hash::make('password123'),
                 'is_admin' => 1,
                 'role' => 'admin',
-                'avatar' => null, // optional
+                'avatar' => null,
             ]
         );
 
-        // 2️⃣ Optionally, create/update a normal user
-        $user = User::updateOrCreate(
+        User::updateOrCreate(
             ['email' => 'user@example.com'],
             [
                 'first_name' => 'Test',
                 'last_name' => 'User',
-                'password' => Hash::make('user123'), // Login password
+                'password' => Hash::make('user123'),
                 'is_admin' => 0,
                 'role' => 'user',
                 'avatar' => null,
